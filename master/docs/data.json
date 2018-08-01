@@ -2,36 +2,221 @@
     "project": {
         "name": "ember-bootstrap-modals-manager",
         "description": "The default blueprint for ember-cli addons.",
-        "version": "1.5.0.57471b70"
+        "version": "1.5.0.421cb470"
     },
     "files": {
         "addon/services/modals-manager.js": {
             "name": "addon/services/modals-manager.js",
-            "modules": {
-                "EmberBootstrapModalsManager": 1
+            "modules": {},
+            "classes": {
+                "addon/services/modals-manager.js~ModalsManager": 1
             },
-            "classes": {},
             "fors": {},
             "namespaces": {}
         }
     },
-    "modules": {
-        "EmberBootstrapModalsManager": {
-            "name": "EmberBootstrapModalsManager",
-            "submodules": {},
-            "elements": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {},
-            "tag": "main",
+    "modules": {},
+    "classes": {
+        "addon/services/modals-manager.js~ModalsManager": {
+            "name": "addon/services/modals-manager.js~ModalsManager",
+            "shortname": "addon/services/modals-manager.js~ModalsManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
             "file": "addon/services/modals-manager.js",
-            "line": 3,
-            "description": "## About\n\n`ember-bootstrap-modals-manager` is an Ember-addon that provides a simple mechanism for interaction with user using modals. This addon is based on modals from `ember-bootstrap`.\n\n**Restriction** from the [Bootstrap#modals](https://getbootstrap.com/docs/3.3/javascript/#modals):\n\n> ##### Multiple open modals not supported\n\n## Demo\n\nYou can check how this addon works on [demo-page](https://onechiporenko.github.io/ember-bootstrap-modals-manager/).\n\n## Install\n\n**Firstly:**\n\n```bash\nember i ember-bootstrap-modals-manager\n```\n\n**Secondly:**\n\nAdd component `modals-container` to the `application.hbs`:\n\n```hbs\n{{outlet}}\n{{modals-container}}\n```\n\n**Thirdly:**\n\nInject a service `modals-manager` where you want to use modals:\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\n\nexport default Controller.extend({\n  modalsManager: service()\n});\n```\n\nThat's it. Now you are able to use predefined modals from `modals-manager`. More detailed below.\n\n### Predefined modals\n\nEvery modal described below takes a single parameter. It's a POJO with properties:\n\n* `title` - modals title\n* `body` - modals body message\n* `footer` - text shown near the footer buttons (empty string by default)\n* `confirm` - text for \"submit\"-button\n* `decline` - text for \"decline\"-button\n\nYou may set default options for all modals with:\n\n```js\nset(modalsManager, 'defaultOptions', {...});\n```\n\n### `alert`\n\nSimilar to the `window.alert`. It shows modal with a single button.\n\nIt's used to notify user about something.\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showAlert() {\n      get(this, 'modalsManager')\n        .alert({title: 'Alert Title', body: 'Alert Body'})\n        .then(() => {\n          // called after user clicks \"Yes\" in the modal\n        });\n    }\n  }\n});\n```\n\n### `confirm`\n\nSimilar to the `window.confirm`. It shows modal with two buttons (\"Yes\" and \"No\").\n\nIt's used to the ask user about confirmation for some action.\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showConfirm() {\n      get(this, 'modalsManager')\n        .confirm({title: 'Confirm Title', body: 'Confirm Body'})\n        .then(() => {\n          // called after user clicks \"Yes\" in the modal\n        })\n        .catch(() => {\n          // called after user clicks \"No\" in the modal\n        });\n    }\n  }\n});\n```\n\n### `prompt`\n\nSimilar to the `window.prompt`. It shows modal with two buttons and single input-field.\n\nIt's used to get some input from user.\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showPrompt() {\n      get(this, 'modalsManager')\n        .prompt({title: 'Prompt Title', body: 'Prompt Body'})\n        .then(promptValue => {\n          // called after user clicks \"Yes\" in the modal\n          // takes a single argument with user's input value\n        })\n        .catch(() => {\n          // called after user clicks \"No\" in the modal\n        });\n    }\n  }\n});\n```\n\nExtra option `disallowEmpty` with `true`-value will disable Confirm-button until user input at least something:\n\n```js\nmodalsManager.prompt({disallowEmpty: true, title: '', body: ''});\n```\n\n### `promptConfirm`\n\nAlmost the same as `prompt`, however its \"Yes\"-button is disabled until user write needed value to the input-field.\n\nAs a `confirm` it's used to the ask user about confirmation for some action, but it's more demanding.\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showPromptConfirm() {\n      get(this, 'modalsManager')\n        .promptConfirm({\n          title: 'Prompt Confirm Title',\n          body: 'Say \"password\" and come in',\n          promptValue: 'password' // it's required\n        })\n        .then(promptValue => {\n          // called after user clicks \"Yes\" in the modal\n          // \"Yes\" will be active only when user prints \"password\" in the input-field\n          // takes a single argument with user input value\n        })\n        .catch(() => {\n          // called after user clicks \"No\" in the modal\n        });\n    }\n  }\n});\n```\n\n### `checkConfirm`\n\nAlmost same as `promptConfirm` however it contains a checkbox instead of text-field. \"Yes\"-button is disabled until checkbox is not checked.\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showCheckConfirmModal() {\n      get(this, 'modalsManager')\n        .checkConfirm({\n          title: 'Confirm Title',\n          body: 'Confirm your suggestion',\n          inputLabel: 'Input Label'\n        })\n        .then(() => {\n          // called after user clicks \"Yes\" in the modal\n        })\n        .catch(() => {\n          // called after user clicks \"No\" in the modal\n        });\n    }\n  }\n});\n```\n\n### `progress`\n\nThis modal used to show a progress-bar for chain of Promises executed one by one. This modal doesn't have any controls like confirm/decline-buttons in the footer or \"&times;\" in the header and can't be closed by pressing `Esc` or clicking somewhere outside a modal. Modal will be confirmed and self-closed after all promises are fulfilled or it will be declined (and self-closed) if at least one promise becomes rejected.\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\nimport {Promise} from 'rsvp';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showPromptConfirm() {\n      const modalsManager = get(this, 'modalsManager');\n      modalsManager\n        .progress({\n          body: '',\n          promises: [ // this is required\n            () => new Promise(resolve => setTimeout(resolve(1), 100)),\n            () => new Promise(resolve => setTimeout(resolve(2), 100)),\n            () => new Promise(resolve => setTimeout(resolve(3), 100))\n          ]\n        })\n        .then(result => {\n          // called after chain of `promises` is executed.\n          // here \"result\" is an array of values for fulfilled promises\n        })\n        .catch(([result, error]) => {\n          // called when at least one promise is rejected\n          // here \"result\" is an array of already fulfilled promises\n          // here \"error\" is a reason why last promise was rejected\n          return modalsManager\n            .alert({\n              title: 'Something goes wrong',\n              body: `Fulfilled - ${result}. Error - ${JSON.stringify(error)}`\n            });\n        });\n    }\n  }\n});\n```\n\nOptions `striped`, `animate`, `type` and `showLabel` will be passed to the progress-bar. See docs for [ember-bootstrap#progress](http://www.ember-bootstrap.com/#/components/progress)\n\n**IMPORTANT** Here `options.promises` is a list of _FUNCTIONS_ that returns Promises!\n\nOption `options.settled` can be used to force complete all provided `promises` and don't stop on first canceled Promise.\n\nOption `options.cancelable` can be used to add ability to stop `promises`-queue.\n\n### `process`\n\nThis modal is used to show a \"placeholder\" while some process is running. This modal doesn't have any controls like confirm/decline-buttons in the footer or \"×\" in the header and can't be closed by pressing Esc or clicking somewhere outside a modal. Modal will be confirmed and self-closed after provided promise (`process`) is fulfilled or it will be declined (and self-closed) if it becomes rejected.\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\nimport {Promise} from 'rsvp';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showProcessModal() {\n      get(this, 'modalsManager')\n        .process({\n          body: 'Some text goes here',\n          iconClass: 'text-center fa fa-spinner fa-spin fa-3x fa-fw',\n          title: '',\n          // this is required\n          process: () => new Promise(resolve => setTimeout(resolve(1), 100))\n        })\n        .then(result => {\n          // called after `process` is resolved\n          // here \"result\" is value of fulfilled Promise\n        })\n        .catch(error => {\n          // called after `process` is rejected\n          // here \"error\" is a reason why last promise was rejected\n        });\n    }\n  }\n});\n```\n\n**IMPORTANT** Here `options.process` is a _FUNCTION_ that return Promise!\n\n## Go Pro\n\n### Custom components for `title`, `body` and `footer`\n\nEvery modal-port like header, body and footer may be customized not only with message and even with a Component.\n\n### `alert`\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showAlert() {\n      get(this, 'modalsManager')\n        .alert({\n          titleComponent: 'custom-alert-title',\n          title: 'Title',\n          bodyComponent: 'custom-alert-body',\n          body: 'Body',\n          footerComponent: 'custom-alert-footer',\n          footer: 'Footer'\n        })\n        .then(() => {});\n    }\n  }\n});\n```\n\n#### Title Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.alert`.\n\n```hbs\n{{! components/custom-alert-header.hbs}}\n<h4 class=\"modal-title\"><i class=\"glyphicon glyphicon-warning-sign\"></i> {{options.title}}</h4>\n```\n\n#### Body Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.alert`.\n\n```hbs\n{{! components/custom-alert-body.hbs}}\n<p class=\"alert alert-info\">{{options.body}}</p>\n```\n\n#### Footer Component\n\nIt takes two parameters. First one is an `options` described before. Second one is an action `confirm` used to confirm modal. It may be used like:\n\n```hbs\n{{! components/custom-alert-footer.hbs}}\n{{options.footer}}\n{{#bs-button onClick=(action confirm)}}Confirm{{/bs-button}}\n```\n\n### `confirm`\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showConfirm() {\n      get(this, 'modalsManager')\n        .confirm({\n          title: 'Confirm Title',\n          body: 'Confirm Body',\n          footer: 'Confirm Footer',\n          titleComponent: 'custom-confirm-title',\n          bodyComponent: 'custom-confirm-body',\n          footerComponent: 'custom-confirm-footer'\n        })\n        .then(() => {})\n        .catch(() => {});\n    }\n  }\n});\n```\n\n#### Title Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.confirm`.\n\n```hbs\n{{! components/custom-confirm-title.hbs}}\n<h4 class=\"modal-title\"><i class=\"glyphicon glyphicon-question-sign\"></i> {{options.title}}</h4>\n```\n\n#### Body Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.confirm`.\n\n```hbs\n{{! components/custom-confirm-body.hbs}}\n<p class=\"alert alert-success\">{{options.body}}</p>\n```\n\n#### Footer Component\n\nIt takes three parameters. First on is an `options` described before. Second one is an action `confirm` used to confirm modal. Third one is an action `decline` used to decline modal. Both of them may be used like:\n\n```hbs\n{{! components/custom-confirm-footer.hbs}}\n{{options.footer}}\n{{#bs-button onClick=(action decline)}}Decline{{/bs-button}}\n{{#bs-button onClick=(action confirm)}}Confirm{{/bs-button}}\n```\n\n### `prompt`\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showPrompt() {\n      get(this, 'modalsManager')\n        .prompt({\n          title: 'Prompt Title',\n          body: 'Prompt Body',\n          footer: 'Prompt Footer',\n          titleComponent: 'custom-prompt-header',\n          bodyComponent: 'custom-prompt-body',\n          footerComponent: 'custom-prompt-footer'\n        })\n        .then(promptValue => {})\n        .catch(() => {});\n    }\n  }\n});\n```\n\n#### Title Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.prompt`.\n\n```hbs\n{{! component/custom-prompt-header.hbs}}\n<h4 class=\"modal-title\"><i class=\"glyphicon glyphicon-info-sign\"></i> {{options.header}}</h4>\n```\n\n#### Body Component\n\nIt takes two parameters. First one is an `options` described before. Second one is an action `updatePromptValue`. It's used to update prompted value in the modal-scope. Usage example:\n\n```hbs\n{{! components/custom-prompt-body.hbs}}\n<p class=\"alert alert-warning\">{{options.body}}</p>\n<input type=\"text\" class=\"form-control\" oninput={{action updatePromptValue value=\"target.value\"}} />\n```\n\n#### Footer Component\n\nIt takes three parameters. First on is an `options` described before. Second one is an action `confirm` used to confirm modal. Third one is an action `decline` used to decline modal. Both of them may be used like:\n\n```hbs\n{{! components/custom-prompt-footer.hbs}}\n{{options.footer}}\n{{#bs-button onClick=(action decline)}}Decline{{/bs-button}}\n{{#bs-button onClick=(action confirm)}}Confirm{{/bs-button}}\n```\n\n### `checkConfirm`\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showCheckConfirm() {\n      get(this, 'modalsManager')\n        .checkConfirm({\n          title: 'Check Confirm Title',\n          footer: 'Prompt Confirm Footer',\n          titleComponent: 'custom-check-confirm-header',\n          bodyComponent: 'custom-check-confirm-body',\n          footerComponent: 'custom-check-confirm-footer'\n        })\n        .then(() => {})\n        .catch(() => {});\n    }\n  }\n});\n```\n\n#### Title Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.prompt`.\n\n```hbs\n{{! component/custom-check-confirm-header.hbs}}\n<h4 class=\"modal-title\"><i class=\"glyphicon glyphicon-asterisk\"></i> Custom Check Confirm Title Component</h4>\n```\n\n#### Body Component\n\nIt takes two parameters. First one is an `options` described before. Second one is an action `updatePromptValue`. It's used to update prompted value in the modal-scope. Usage example:\n\n```hbs\n{{! components/custom-check-confirm-body.hbs}}\n<p class=\"alert alert-danger\">Custom Check Confirm Body Component</p>\n<div class=\"form-group\">\n  <div class=\"checkbox\">\n    <label>\n      <input type=\"checkbox\" onchange={{action updatePromptValue value=\"target.value\"}}/> Custom Label\n    </label>\n  </div>\n</div>\n```\n\n#### Footer Component\n\nIt takes four parameters. First one is an `options` described before. Second one is a `confirmDisabled`. This flag determines if confirm-button should be disabled. Last two are actions `confirm` and `decline` used as click-handler for \"Yes\" and \"No\" buttons. Usage example:\n\n```hbs\n{{! components/custom-check-confirm-footer.hbs}}\nCustom Check Confirm Footer Component {{#bs-button onClick=(action decline)}}Decline{{/bs-button}} {{#bs-button\ndisabled=confirmDisabled onClick=(action confirm) type=\"primary\"}}Confirm{{/bs-button}}\n```\n\n### `promptConfirm`\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showPromptConfirm() {\n      get(this, 'modalsManager')\n        .promptConfirm({\n          title: 'Prompt Confirm Title',\n          body: 'Say \"password\" and come in',\n          footer: 'Prompt Confirm Footer',\n          titleComponent: 'custom-prompt-confirm-header',\n          bodyComponent: 'custom-prompt-confirm-body',\n          footerComponent: 'custom-prompt-confirm-footer',\n          promptValue: 'password' // it's required\n        })\n        .then(promptValue => {})\n        .catch(() => {});\n    }\n  }\n});\n```\n\n#### Title Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.promptConfirm`.\n\n```hbs\n<h4 class=\"modal-title\"><i class=\"glyphicon glyphicon-asterisk\"></i> {{options.title}}</h4>\n```\n\n#### Body Component\n\nIt takes two parameters. First one is an `options` described before. Second one is an action `updatePromptValue`. It's used to update prompted value in the modal-scope. Usage example:\n\n```hbs\n{{! components/custom-prompt-confirm-body.hbs}}\n<p class=\"alert alert-danger\">\n  {{options.body}}\n  Please enter a \"{{options.promptValue}}\" without quotes\n</p>\n<input type=\"text\" class=\"form-control\" oninput={{action updatePromptValue value=\"target.value\"}} />\n```\n\n#### Footer Component\n\nIt takes four parameters. First one is an `options` described before. Second one is a `confirmDisabled`. This flag determines if confirm-button should be disabled. Last two are actions `confirm` and `decline` used as click-handler for \"Yes\" and \"No\" buttons. Usage example:\n\n```hbs\n{{! components/custom-prompt-confirm-footer.hbs}}\n{{options.footer}}\n{{#bs-button onClick=(action decline)}}Decline{{/bs-button}}\n{{#bs-button disabled=confirmDisabled onClick=(action confirm)}}Confirm{{/bs-button}}\n```\n\n### `progress`\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\nimport {Promise} from 'rsvp';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showPromptConfirm() {\n      const modalsManager = get(this, 'modalsManager');\n      modalsManager\n        .progress({\n          body: '',\n          titleComponent: 'custom-progress-header',\n          bodyComponent: 'custom-progress-body',\n          footerComponent: 'custom-progress-footer',\n          promises: [ // this is required\n            () => new Promise(resolve => setTimeout(resolve(1), 100)),\n            () => new Promise(resolve => setTimeout(resolve(2), 100)),\n            () => new Promise(resolve => setTimeout(resolve(3), 100))\n          ]\n        })\n        .then(result => {\n          // called after chain of `promises` is executed.\n          // here \"result\" is an array of values for fulfilled promises\n        })\n        .catch(([result, error]) => {\n          // called when at least one promise is rejected\n          // here \"result\" is an array of already fulfilled promises\n          // here \"error\" is a reason why last promise was rejected\n          return modalsManager\n            .alert({\n              title: 'Something goes wrong',\n              body: `Fulfilled - ${result}. Error - ${JSON.stringify(error)}`\n            });\n        });\n    }\n  }\n});\n```\n\n#### Title Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.progress`.\n\n```hbs\n<h4 class=\"modal-title\"><i class=\"glyphicon glyphicon-info-sign\"></i> Custom Progress Title Component</h4>\n```\n\n#### Body Component\n\nIt takes four parameters. First one is an options described before. Second one is an `overall` - number of `promises` passed to the modal. Third one is a `done` - number of already fulfilled promises. Fourth one is a `progress` - calculated percentage value of the fulfilled promises that me be used in the progress-bar. Usage example:\n\n```hbs\n<p class=\"alert alert-info\">Custom Progress Body Component {{done}} / {{overall}}</p>\n{{#bs-progress as |p|}}\n {{p.bar\n   value=progress\n   showLabel=options.showLabel\n   striped=options.striped\n   animate=options.animate\n   type=options.type\n }}\n{{/bs-progress}}\n```\n\n#### Footer Component\n\nIt takes one parameter called `options`. It was described before. There are no action-handlers because progress-modal is auto-closed and triggers `decline` and `confirm` by itself and not with user's interaction.\n\n```hbs\n<p>Custom Progress Footer Component</p>\n```\n\n### `process`\n\n```js\nimport Controller from '@ember/controller';\nimport {inject as service} from '@ember/service';\nimport {get} from '@ember/object';\nimport {Promise} from 'rsvp';\n\nexport default Controller.extend({\n  modalsManager: service(),\n\n  actions: {\n    showProcessModal() {\n      get(this, 'modalsManager')\n        .process({\n          bodyComponent: 'custom-process-body',\n          headerComponent: 'custom-process-footer',\n          footerComponent: 'custom-process-header',\n          process: () => new Promise(resolve => setTimeout(resolve(1), 100))\n        })\n        .then(result => {})\n        .catch(error => {});\n    }\n  }\n});\n```\n\n#### Title Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.process`.\n\n#### Body Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.process`.\n\n#### Footer Component\n\nIt takes a single parameter `options`. Its value is an object passed to the `modalsManager.process`.",
-            "itemtype": "main"
+            "line": 3
         }
     },
-    "classes": {},
     "elements": {},
-    "classitems": [],
-    "warnings": []
+    "classitems": [
+        {
+            "file": "addon/services/modals-manager.js",
+            "line": 8,
+            "description": "Shows custom modal",
+            "itemtype": "method",
+            "name": "show",
+            "params": [
+                {
+                    "name": "componentName",
+                    "description": "component's name with custom modal",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RSVP.Promise"
+            },
+            "class": "addon/services/modals-manager.js~ModalsManager"
+        },
+        {
+            "file": "addon/services/modals-manager.js",
+            "line": 17,
+            "description": "Shows `alert`-modal",
+            "itemtype": "method",
+            "name": "alert",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RSVP.Promise"
+            },
+            "class": "addon/services/modals-manager.js~ModalsManager"
+        },
+        {
+            "file": "addon/services/modals-manager.js",
+            "line": 25,
+            "description": "Shows `confirm`-modal",
+            "itemtype": "method",
+            "name": "confirm",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RSVP.Promise"
+            },
+            "class": "addon/services/modals-manager.js~ModalsManager"
+        },
+        {
+            "file": "addon/services/modals-manager.js",
+            "line": 33,
+            "description": "Shows `prompt`-modal",
+            "itemtype": "method",
+            "name": "prompt",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RSVP.Promise"
+            },
+            "class": "addon/services/modals-manager.js~ModalsManager"
+        },
+        {
+            "file": "addon/services/modals-manager.js",
+            "line": 41,
+            "description": "Shows `prompt-confirm`-modal",
+            "itemtype": "method",
+            "name": "promptConfirm",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RSVP.Promise"
+            },
+            "class": "addon/services/modals-manager.js~ModalsManager"
+        },
+        {
+            "file": "addon/services/modals-manager.js",
+            "line": 49,
+            "description": "Show `check-confirm`-modal",
+            "itemtype": "method",
+            "name": "checkConfirm",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RSVP.Promise"
+            },
+            "class": "addon/services/modals-manager.js~ModalsManager"
+        },
+        {
+            "file": "addon/services/modals-manager.js",
+            "line": 57,
+            "description": "Shows `progress`-modal",
+            "itemtype": "method",
+            "name": "progress",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RSVP.Promise"
+            },
+            "class": "addon/services/modals-manager.js~ModalsManager"
+        },
+        {
+            "file": "addon/services/modals-manager.js",
+            "line": 65,
+            "description": "Shows `process`-modal",
+            "itemtype": "method",
+            "name": "process",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RSVP.Promise"
+            },
+            "class": "addon/services/modals-manager.js~ModalsManager"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/services/modals-manager.js:17"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/services/modals-manager.js:25"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/services/modals-manager.js:33"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/services/modals-manager.js:41"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/services/modals-manager.js:49"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/services/modals-manager.js:57"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/services/modals-manager.js:65"
+        }
+    ]
 }

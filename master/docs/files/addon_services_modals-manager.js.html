@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-bootstrap-modals-manager" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.5.0.57471b70</em>
+            <em>API Docs for: 1.5.0.421cb470</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,11 +38,11 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/addon/services/modals-manager.js~ModalsManager.html">addon/services/modals-manager.js~ModalsManager</a></li>
                             </ul>
                 
                 
                             <ul id="api-modules" class="apis modules">
-                                <li><a href="../modules/EmberBootstrapModalsManager.html">EmberBootstrapModalsManager</a></li>
                             </ul>
                         </div>
                     </div>
@@ -83,733 +83,76 @@
 import ModalsManager from &#x27;ember-modals-manager-internal/services/modals-manager&#x27;;
 
 /**
- * ## About
- *
- * &#x60;ember-bootstrap-modals-manager&#x60; is an Ember-addon that provides a simple mechanism for interaction with user using modals. This addon is based on modals from &#x60;ember-bootstrap&#x60;.
- *
- * **Restriction** from the [Bootstrap#modals](https://getbootstrap.com/docs/3.3/javascript/#modals):
- *
- * &gt; ##### Multiple open modals not supported
- *
- * ## Demo
- *
- * You can check how this addon works on [demo-page](https://onechiporenko.github.io/ember-bootstrap-modals-manager/).
- *
- * ## Install
- *
- * **Firstly:**
- *
- * &#x60;&#x60;&#x60;bash
- * ember i ember-bootstrap-modals-manager
- * &#x60;&#x60;&#x60;
- *
- * **Secondly:**
- *
- * Add component &#x60;modals-container&#x60; to the &#x60;application.hbs&#x60;:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{outlet}}
- * {{modals-container}}
- * &#x60;&#x60;&#x60;
- *
- * **Thirdly:**
- *
- * Inject a service &#x60;modals-manager&#x60; where you want to use modals:
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service()
- * });
- * &#x60;&#x60;&#x60;
- *
- * That&#x27;s it. Now you are able to use predefined modals from &#x60;modals-manager&#x60;. More detailed below.
- *
- * ### Predefined modals
- *
- * Every modal described below takes a single parameter. It&#x27;s a POJO with properties:
- *
- * * &#x60;title&#x60; - modals title
- * * &#x60;body&#x60; - modals body message
- * * &#x60;footer&#x60; - text shown near the footer buttons (empty string by default)
- * * &#x60;confirm&#x60; - text for &quot;submit&quot;-button
- * * &#x60;decline&#x60; - text for &quot;decline&quot;-button
- *
- * You may set default options for all modals with:
- *
- * &#x60;&#x60;&#x60;js
- * set(modalsManager, &#x27;defaultOptions&#x27;, {...});
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;alert&#x60;
- *
- * Similar to the &#x60;window.alert&#x60;. It shows modal with a single button.
- *
- * It&#x27;s used to notify user about something.
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showAlert() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .alert({title: &#x27;Alert Title&#x27;, body: &#x27;Alert Body&#x27;})
- *         .then(() =&gt; {
- *           // called after user clicks &quot;Yes&quot; in the modal
- *         });
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;confirm&#x60;
- *
- * Similar to the &#x60;window.confirm&#x60;. It shows modal with two buttons (&quot;Yes&quot; and &quot;No&quot;).
- *
- * It&#x27;s used to the ask user about confirmation for some action.
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showConfirm() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .confirm({title: &#x27;Confirm Title&#x27;, body: &#x27;Confirm Body&#x27;})
- *         .then(() =&gt; {
- *           // called after user clicks &quot;Yes&quot; in the modal
- *         })
- *         .catch(() =&gt; {
- *           // called after user clicks &quot;No&quot; in the modal
- *         });
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;prompt&#x60;
- *
- * Similar to the &#x60;window.prompt&#x60;. It shows modal with two buttons and single input-field.
- *
- * It&#x27;s used to get some input from user.
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showPrompt() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .prompt({title: &#x27;Prompt Title&#x27;, body: &#x27;Prompt Body&#x27;})
- *         .then(promptValue =&gt; {
- *           // called after user clicks &quot;Yes&quot; in the modal
- *           // takes a single argument with user&#x27;s input value
- *         })
- *         .catch(() =&gt; {
- *           // called after user clicks &quot;No&quot; in the modal
- *         });
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * Extra option &#x60;disallowEmpty&#x60; with &#x60;true&#x60;-value will disable Confirm-button until user input at least something:
- *
- * &#x60;&#x60;&#x60;js
- * modalsManager.prompt({disallowEmpty: true, title: &#x27;&#x27;, body: &#x27;&#x27;});
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;promptConfirm&#x60;
- *
- * Almost the same as &#x60;prompt&#x60;, however its &quot;Yes&quot;-button is disabled until user write needed value to the input-field.
- *
- * As a &#x60;confirm&#x60; it&#x27;s used to the ask user about confirmation for some action, but it&#x27;s more demanding.
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showPromptConfirm() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .promptConfirm({
- *           title: &#x27;Prompt Confirm Title&#x27;,
- *           body: &#x27;Say &quot;password&quot; and come in&#x27;,
- *           promptValue: &#x27;password&#x27; // it&#x27;s required
- *         })
- *         .then(promptValue =&gt; {
- *           // called after user clicks &quot;Yes&quot; in the modal
- *           // &quot;Yes&quot; will be active only when user prints &quot;password&quot; in the input-field
- *           // takes a single argument with user input value
- *         })
- *         .catch(() =&gt; {
- *           // called after user clicks &quot;No&quot; in the modal
- *         });
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;checkConfirm&#x60;
- *
- * Almost same as &#x60;promptConfirm&#x60; however it contains a checkbox instead of text-field. &quot;Yes&quot;-button is disabled until checkbox is not checked.
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showCheckConfirmModal() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .checkConfirm({
- *           title: &#x27;Confirm Title&#x27;,
- *           body: &#x27;Confirm your suggestion&#x27;,
- *           inputLabel: &#x27;Input Label&#x27;
- *         })
- *         .then(() =&gt; {
- *           // called after user clicks &quot;Yes&quot; in the modal
- *         })
- *         .catch(() =&gt; {
- *           // called after user clicks &quot;No&quot; in the modal
- *         });
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;progress&#x60;
- *
- * This modal used to show a progress-bar for chain of Promises executed one by one. This modal doesn&#x27;t have any controls like confirm/decline-buttons in the footer or &quot;&amp;times;&quot; in the header and can&#x27;t be closed by pressing &#x60;Esc&#x60; or clicking somewhere outside a modal. Modal will be confirmed and self-closed after all promises are fulfilled or it will be declined (and self-closed) if at least one promise becomes rejected.
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- * import {Promise} from &#x27;rsvp&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showPromptConfirm() {
- *       const modalsManager = get(this, &#x27;modalsManager&#x27;);
- *       modalsManager
- *         .progress({
- *           body: &#x27;&#x27;,
- *           promises: [ // this is required
- *             () =&gt; new Promise(resolve =&gt; setTimeout(resolve(1), 100)),
- *             () =&gt; new Promise(resolve =&gt; setTimeout(resolve(2), 100)),
- *             () =&gt; new Promise(resolve =&gt; setTimeout(resolve(3), 100))
- *           ]
- *         })
- *         .then(result =&gt; {
- *           // called after chain of &#x60;promises&#x60; is executed.
- *           // here &quot;result&quot; is an array of values for fulfilled promises
- *         })
- *         .catch(([result, error]) =&gt; {
- *           // called when at least one promise is rejected
- *           // here &quot;result&quot; is an array of already fulfilled promises
- *           // here &quot;error&quot; is a reason why last promise was rejected
- *           return modalsManager
- *             .alert({
- *               title: &#x27;Something goes wrong&#x27;,
- *               body: &#x60;Fulfilled - ${result}. Error - ${JSON.stringify(error)}&#x60;
- *             });
- *         });
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * Options &#x60;striped&#x60;, &#x60;animate&#x60;, &#x60;type&#x60; and &#x60;showLabel&#x60; will be passed to the progress-bar. See docs for [ember-bootstrap#progress](http://www.ember-bootstrap.com/#/components/progress)
- *
- * **IMPORTANT** Here &#x60;options.promises&#x60; is a list of _FUNCTIONS_ that returns Promises!
- *
- * Option &#x60;options.settled&#x60; can be used to force complete all provided &#x60;promises&#x60; and don&#x27;t stop on first canceled Promise.
- *
- * Option &#x60;options.cancelable&#x60; can be used to add ability to stop &#x60;promises&#x60;-queue.
- *
- * ### &#x60;process&#x60;
- *
- * This modal is used to show a &quot;placeholder&quot; while some process is running. This modal doesn&#x27;t have any controls like confirm/decline-buttons in the footer or &quot;×&quot; in the header and can&#x27;t be closed by pressing Esc or clicking somewhere outside a modal. Modal will be confirmed and self-closed after provided promise (&#x60;process&#x60;) is fulfilled or it will be declined (and self-closed) if it becomes rejected.
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- * import {Promise} from &#x27;rsvp&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showProcessModal() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .process({
- *           body: &#x27;Some text goes here&#x27;,
- *           iconClass: &#x27;text-center fa fa-spinner fa-spin fa-3x fa-fw&#x27;,
- *           title: &#x27;&#x27;,
- *           // this is required
- *           process: () =&gt; new Promise(resolve =&gt; setTimeout(resolve(1), 100))
- *         })
- *         .then(result =&gt; {
- *           // called after &#x60;process&#x60; is resolved
- *           // here &quot;result&quot; is value of fulfilled Promise
- *         })
- *         .catch(error =&gt; {
- *           // called after &#x60;process&#x60; is rejected
- *           // here &quot;error&quot; is a reason why last promise was rejected
- *         });
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * **IMPORTANT** Here &#x60;options.process&#x60; is a _FUNCTION_ that return Promise!
- *
- * ## Go Pro
- *
- * ### Custom components for &#x60;title&#x60;, &#x60;body&#x60; and &#x60;footer&#x60;
- *
- * Every modal-port like header, body and footer may be customized not only with message and even with a Component.
- *
- * ### &#x60;alert&#x60;
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showAlert() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .alert({
- *           titleComponent: &#x27;custom-alert-title&#x27;,
- *           title: &#x27;Title&#x27;,
- *           bodyComponent: &#x27;custom-alert-body&#x27;,
- *           body: &#x27;Body&#x27;,
- *           footerComponent: &#x27;custom-alert-footer&#x27;,
- *           footer: &#x27;Footer&#x27;
- *         })
- *         .then(() =&gt; {});
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * #### Title Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.alert&#x60;.
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-alert-header.hbs}}
- * &lt;h4 class=&quot;modal-title&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-warning-sign&quot;&gt;&lt;/i&gt; {{options.title}}&lt;/h4&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Body Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.alert&#x60;.
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-alert-body.hbs}}
- * &lt;p class=&quot;alert alert-info&quot;&gt;{{options.body}}&lt;/p&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Footer Component
- *
- * It takes two parameters. First one is an &#x60;options&#x60; described before. Second one is an action &#x60;confirm&#x60; used to confirm modal. It may be used like:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-alert-footer.hbs}}
- * {{options.footer}}
- * {{#bs-button onClick=(action confirm)}}Confirm{{/bs-button}}
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;confirm&#x60;
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showConfirm() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .confirm({
- *           title: &#x27;Confirm Title&#x27;,
- *           body: &#x27;Confirm Body&#x27;,
- *           footer: &#x27;Confirm Footer&#x27;,
- *           titleComponent: &#x27;custom-confirm-title&#x27;,
- *           bodyComponent: &#x27;custom-confirm-body&#x27;,
- *           footerComponent: &#x27;custom-confirm-footer&#x27;
- *         })
- *         .then(() =&gt; {})
- *         .catch(() =&gt; {});
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * #### Title Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.confirm&#x60;.
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-confirm-title.hbs}}
- * &lt;h4 class=&quot;modal-title&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-question-sign&quot;&gt;&lt;/i&gt; {{options.title}}&lt;/h4&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Body Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.confirm&#x60;.
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-confirm-body.hbs}}
- * &lt;p class=&quot;alert alert-success&quot;&gt;{{options.body}}&lt;/p&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Footer Component
- *
- * It takes three parameters. First on is an &#x60;options&#x60; described before. Second one is an action &#x60;confirm&#x60; used to confirm modal. Third one is an action &#x60;decline&#x60; used to decline modal. Both of them may be used like:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-confirm-footer.hbs}}
- * {{options.footer}}
- * {{#bs-button onClick=(action decline)}}Decline{{/bs-button}}
- * {{#bs-button onClick=(action confirm)}}Confirm{{/bs-button}}
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;prompt&#x60;
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showPrompt() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .prompt({
- *           title: &#x27;Prompt Title&#x27;,
- *           body: &#x27;Prompt Body&#x27;,
- *           footer: &#x27;Prompt Footer&#x27;,
- *           titleComponent: &#x27;custom-prompt-header&#x27;,
- *           bodyComponent: &#x27;custom-prompt-body&#x27;,
- *           footerComponent: &#x27;custom-prompt-footer&#x27;
- *         })
- *         .then(promptValue =&gt; {})
- *         .catch(() =&gt; {});
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * #### Title Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.prompt&#x60;.
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! component/custom-prompt-header.hbs}}
- * &lt;h4 class=&quot;modal-title&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-info-sign&quot;&gt;&lt;/i&gt; {{options.header}}&lt;/h4&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Body Component
- *
- * It takes two parameters. First one is an &#x60;options&#x60; described before. Second one is an action &#x60;updatePromptValue&#x60;. It&#x27;s used to update prompted value in the modal-scope. Usage example:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-prompt-body.hbs}}
- * &lt;p class=&quot;alert alert-warning&quot;&gt;{{options.body}}&lt;/p&gt;
- * &lt;input type=&quot;text&quot; class=&quot;form-control&quot; oninput={{action updatePromptValue value=&quot;target.value&quot;}} /&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Footer Component
- *
- * It takes three parameters. First on is an &#x60;options&#x60; described before. Second one is an action &#x60;confirm&#x60; used to confirm modal. Third one is an action &#x60;decline&#x60; used to decline modal. Both of them may be used like:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-prompt-footer.hbs}}
- * {{options.footer}}
- * {{#bs-button onClick=(action decline)}}Decline{{/bs-button}}
- * {{#bs-button onClick=(action confirm)}}Confirm{{/bs-button}}
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;checkConfirm&#x60;
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showCheckConfirm() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .checkConfirm({
- *           title: &#x27;Check Confirm Title&#x27;,
- *           footer: &#x27;Prompt Confirm Footer&#x27;,
- *           titleComponent: &#x27;custom-check-confirm-header&#x27;,
- *           bodyComponent: &#x27;custom-check-confirm-body&#x27;,
- *           footerComponent: &#x27;custom-check-confirm-footer&#x27;
- *         })
- *         .then(() =&gt; {})
- *         .catch(() =&gt; {});
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * #### Title Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.prompt&#x60;.
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! component/custom-check-confirm-header.hbs}}
- * &lt;h4 class=&quot;modal-title&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-asterisk&quot;&gt;&lt;/i&gt; Custom Check Confirm Title Component&lt;/h4&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Body Component
- *
- * It takes two parameters. First one is an &#x60;options&#x60; described before. Second one is an action &#x60;updatePromptValue&#x60;. It&#x27;s used to update prompted value in the modal-scope. Usage example:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-check-confirm-body.hbs}}
- * &lt;p class=&quot;alert alert-danger&quot;&gt;Custom Check Confirm Body Component&lt;/p&gt;
- * &lt;div class=&quot;form-group&quot;&gt;
- *   &lt;div class=&quot;checkbox&quot;&gt;
- *     &lt;label&gt;
- *       &lt;input type=&quot;checkbox&quot; onchange={{action updatePromptValue value=&quot;target.value&quot;}}/&gt; Custom Label
- *     &lt;/label&gt;
- *   &lt;/div&gt;
- * &lt;/div&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Footer Component
- *
- * It takes four parameters. First one is an &#x60;options&#x60; described before. Second one is a &#x60;confirmDisabled&#x60;. This flag determines if confirm-button should be disabled. Last two are actions &#x60;confirm&#x60; and &#x60;decline&#x60; used as click-handler for &quot;Yes&quot; and &quot;No&quot; buttons. Usage example:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-check-confirm-footer.hbs}}
- * Custom Check Confirm Footer Component {{#bs-button onClick=(action decline)}}Decline{{/bs-button}} {{#bs-button
- * disabled=confirmDisabled onClick=(action confirm) type=&quot;primary&quot;}}Confirm{{/bs-button}}
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;promptConfirm&#x60;
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showPromptConfirm() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .promptConfirm({
- *           title: &#x27;Prompt Confirm Title&#x27;,
- *           body: &#x27;Say &quot;password&quot; and come in&#x27;,
- *           footer: &#x27;Prompt Confirm Footer&#x27;,
- *           titleComponent: &#x27;custom-prompt-confirm-header&#x27;,
- *           bodyComponent: &#x27;custom-prompt-confirm-body&#x27;,
- *           footerComponent: &#x27;custom-prompt-confirm-footer&#x27;,
- *           promptValue: &#x27;password&#x27; // it&#x27;s required
- *         })
- *         .then(promptValue =&gt; {})
- *         .catch(() =&gt; {});
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * #### Title Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.promptConfirm&#x60;.
- *
- * &#x60;&#x60;&#x60;hbs
- * &lt;h4 class=&quot;modal-title&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-asterisk&quot;&gt;&lt;/i&gt; {{options.title}}&lt;/h4&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Body Component
- *
- * It takes two parameters. First one is an &#x60;options&#x60; described before. Second one is an action &#x60;updatePromptValue&#x60;. It&#x27;s used to update prompted value in the modal-scope. Usage example:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-prompt-confirm-body.hbs}}
- * &lt;p class=&quot;alert alert-danger&quot;&gt;
- *   {{options.body}}
- *   Please enter a &quot;{{options.promptValue}}&quot; without quotes
- * &lt;/p&gt;
- * &lt;input type=&quot;text&quot; class=&quot;form-control&quot; oninput={{action updatePromptValue value=&quot;target.value&quot;}} /&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Footer Component
- *
- * It takes four parameters. First one is an &#x60;options&#x60; described before. Second one is a &#x60;confirmDisabled&#x60;. This flag determines if confirm-button should be disabled. Last two are actions &#x60;confirm&#x60; and &#x60;decline&#x60; used as click-handler for &quot;Yes&quot; and &quot;No&quot; buttons. Usage example:
- *
- * &#x60;&#x60;&#x60;hbs
- * {{! components/custom-prompt-confirm-footer.hbs}}
- * {{options.footer}}
- * {{#bs-button onClick=(action decline)}}Decline{{/bs-button}}
- * {{#bs-button disabled=confirmDisabled onClick=(action confirm)}}Confirm{{/bs-button}}
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;progress&#x60;
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- * import {Promise} from &#x27;rsvp&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showPromptConfirm() {
- *       const modalsManager = get(this, &#x27;modalsManager&#x27;);
- *       modalsManager
- *         .progress({
- *           body: &#x27;&#x27;,
- *           titleComponent: &#x27;custom-progress-header&#x27;,
- *           bodyComponent: &#x27;custom-progress-body&#x27;,
- *           footerComponent: &#x27;custom-progress-footer&#x27;,
- *           promises: [ // this is required
- *             () =&gt; new Promise(resolve =&gt; setTimeout(resolve(1), 100)),
- *             () =&gt; new Promise(resolve =&gt; setTimeout(resolve(2), 100)),
- *             () =&gt; new Promise(resolve =&gt; setTimeout(resolve(3), 100))
- *           ]
- *         })
- *         .then(result =&gt; {
- *           // called after chain of &#x60;promises&#x60; is executed.
- *           // here &quot;result&quot; is an array of values for fulfilled promises
- *         })
- *         .catch(([result, error]) =&gt; {
- *           // called when at least one promise is rejected
- *           // here &quot;result&quot; is an array of already fulfilled promises
- *           // here &quot;error&quot; is a reason why last promise was rejected
- *           return modalsManager
- *             .alert({
- *               title: &#x27;Something goes wrong&#x27;,
- *               body: &#x60;Fulfilled - ${result}. Error - ${JSON.stringify(error)}&#x60;
- *             });
- *         });
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * #### Title Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.progress&#x60;.
- *
- * &#x60;&#x60;&#x60;hbs
- * &lt;h4 class=&quot;modal-title&quot;&gt;&lt;i class=&quot;glyphicon glyphicon-info-sign&quot;&gt;&lt;/i&gt; Custom Progress Title Component&lt;/h4&gt;
- * &#x60;&#x60;&#x60;
- *
- * #### Body Component
- *
- * It takes four parameters. First one is an options described before. Second one is an &#x60;overall&#x60; - number of &#x60;promises&#x60; passed to the modal. Third one is a &#x60;done&#x60; - number of already fulfilled promises. Fourth one is a &#x60;progress&#x60; - calculated percentage value of the fulfilled promises that me be used in the progress-bar. Usage example:
- *
- * &#x60;&#x60;&#x60;hbs
- * &lt;p class=&quot;alert alert-info&quot;&gt;Custom Progress Body Component {{done}} / {{overall}}&lt;/p&gt;
- *{{#bs-progress as |p|}}
- *  {{p.bar
- *    value=progress
- *    showLabel=options.showLabel
- *    striped=options.striped
- *    animate=options.animate
- *    type=options.type
- *  }}
- *{{/bs-progress}}
- * &#x60;&#x60;&#x60;
- *
- * #### Footer Component
- *
- * It takes one parameter called &#x60;options&#x60;. It was described before. There are no action-handlers because progress-modal is auto-closed and triggers &#x60;decline&#x60; and &#x60;confirm&#x60; by itself and not with user&#x27;s interaction.
- *
- * &#x60;&#x60;&#x60;hbs
- * &lt;p&gt;Custom Progress Footer Component&lt;/p&gt;
- * &#x60;&#x60;&#x60;
- *
- * ### &#x60;process&#x60;
- *
- * &#x60;&#x60;&#x60;js
- * import Controller from &#x27;@ember/controller&#x27;;
- * import {inject as service} from &#x27;@ember/service&#x27;;
- * import {get} from &#x27;@ember/object&#x27;;
- * import {Promise} from &#x27;rsvp&#x27;;
- *
- * export default Controller.extend({
- *   modalsManager: service(),
- *
- *   actions: {
- *     showProcessModal() {
- *       get(this, &#x27;modalsManager&#x27;)
- *         .process({
- *           bodyComponent: &#x27;custom-process-body&#x27;,
- *           headerComponent: &#x27;custom-process-footer&#x27;,
- *           footerComponent: &#x27;custom-process-header&#x27;,
- *           process: () =&gt; new Promise(resolve =&gt; setTimeout(resolve(1), 100))
- *         })
- *         .then(result =&gt; {})
- *         .catch(error =&gt; {});
- *     }
- *   }
- * });
- * &#x60;&#x60;&#x60;
- *
- * #### Title Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.process&#x60;.
- *
- * #### Body Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.process&#x60;.
- *
- * #### Footer Component
- *
- * It takes a single parameter &#x60;options&#x60;. Its value is an object passed to the &#x60;modalsManager.process&#x60;.
- *
- * @module EmberBootstrapModalsManager
- * @main EmberBootstrapModalsManager
+ * @class ModalsManager
  */
-export default ModalsManager.extend({});
+export default ModalsManager.extend({
+
+  /**
+   * Shows custom modal
+   *
+   * @method show
+   * @param {string} componentName component&#x27;s name with custom modal
+   * @param {object} options
+   * @return {RSVP.Promise}
+   */
+
+  /**
+   * Shows &#x60;alert&#x60;-modal
+   *
+   * @method alert
+   * @param {object} options
+   * @returns {RSVP.Promise}
+   */
+
+  /**
+   * Shows &#x60;confirm&#x60;-modal
+   *
+   * @method confirm
+   * @param {object} options
+   * @returns {RSVP.Promise}
+   */
+
+  /**
+   * Shows &#x60;prompt&#x60;-modal
+   *
+   * @method prompt
+   * @param {object} options
+   * @returns {RSVP.Promise}
+   */
+
+  /**
+   * Shows &#x60;prompt-confirm&#x60;-modal
+   *
+   * @method promptConfirm
+   * @param {object} options
+   * @returns {RSVP.Promise}
+   */
+
+  /**
+   * Show &#x60;check-confirm&#x60;-modal
+   *
+   * @method checkConfirm
+   * @param {object} options
+   * @returns {RSVP.Promise}
+   */
+
+  /**
+   * Shows &#x60;progress&#x60;-modal
+   *
+   * @method progress
+   * @param {object} options
+   * @returns {RSVP.Promise}
+   */
+
+  /**
+   * Shows &#x60;process&#x60;-modal
+   *
+   * @method process
+   * @param {object} options
+   * @returns {RSVP.Promise}
+   */
+
+});
 
     </pre>
 </div>
