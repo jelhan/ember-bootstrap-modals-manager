@@ -1,0 +1,1 @@
+{"jsonapi":{"version":"1.0"},"data":{"type":"project","id":"ember-bootstrap-modals-manager","attributes":{"name":"ember-bootstrap-modals-manager","version":"1.5.0","navigationIndex":{}},"relationships":{"modules":{"data":[]}}}}
