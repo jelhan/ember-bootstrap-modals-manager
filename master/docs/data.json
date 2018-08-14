@@ -2,7 +2,7 @@
     "project": {
         "name": "ember-bootstrap-modals-manager",
         "description": "The default blueprint for ember-cli addons.",
-        "version": "1.6.0.8a8f4212"
+        "version": "1.6.0.70bee0e4"
     },
     "files": {
         "addon/services/modals-manager.js": {
@@ -189,34 +189,5 @@
             "class": "addon/services/modals-manager.js~ModalsManager"
         }
     ],
-    "warnings": [
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/services/modals-manager.js:17"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/services/modals-manager.js:25"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/services/modals-manager.js:33"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/services/modals-manager.js:41"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/services/modals-manager.js:49"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/services/modals-manager.js:57"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/services/modals-manager.js:65"
-        }
-    ]
+    "warnings": []
 }
