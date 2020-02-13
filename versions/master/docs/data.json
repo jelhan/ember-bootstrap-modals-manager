@@ -2,7 +2,7 @@
     "project": {
         "name": "ember-bootstrap-modals-manager",
         "description": "The default blueprint for ember-cli addons.",
-        "version": "3.2.0.2850af73"
+        "version": "3.2.0.3d691672"
     },
     "files": {
         "addon/services/modals-manager.js": {
